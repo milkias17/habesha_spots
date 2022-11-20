@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-
 import models
 import schemas
 from auth import authenticate_access_token
 from db import get_db
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
 reviews_router = APIRouter(prefix="/api")
 
@@ -26,3 +25,10 @@ def get_reviews(
     user: models.User = Depends(authenticate_access_token),
 ):
     return user.reviews
+
+
+@reviews_router.get("/review/{review_id}")
+def get_review(review_id: int, db: Session = Depends(get_db)):
+    review = db.query(models.Reviews).filter_by(id=review_id).first()
+
+    return schemas.Review.from_orm(review)

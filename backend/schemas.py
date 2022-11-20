@@ -40,3 +40,8 @@ class ReviewCreate(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Review(ReviewCreate):
+    id: int
+    user_id: int
